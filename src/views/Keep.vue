@@ -3,24 +3,33 @@
     fluid
     fill-height
     class="grey lighten-4">
-    <v-row v-masonry>
-      <v-col
-        v-for="(item, index) in items"
-        :key="index"
-        cols="12"
-        sm="3">
+    <v-row>
+      <masonry
+        style="width:100%"
+        :gutter="{ default: '30px', 700: '15px' }"
+        :cols="{ default: 3, 1000: 3, 700: 2, 500: 1 }">
         <v-card
-          height="100%"
-          color="blue"
-          class="pt-1 pb-1"
-          @click="deleteItem(index)">
-          <v-card-title>{{ item.title }}</v-card-title>
+          v-for="item in items"
+          :key="item.id"
+          class="mt-2 mb-2"
+          color="yellow lighten-5">
+          <v-toolbar
+            flat
+            dense
+            color="transparent"
+            class="font-weight-bold">
+            {{ item.title }}
+          </v-toolbar>
           <v-img
-            :src="item.img"
-            @load="this.$redrawVueMasonry()"></v-img>
-          <v-card-text>{{ item.text }}</v-card-text>
+            v-if="item.img"
+            width="100%"
+            :height="item.height"
+            :src="item.img"></v-img>
+          <v-card-text v-if="item.text">
+            {{ item.text }}
+          </v-card-text>
         </v-card>
-      </v-col>
+      </masonry>
     </v-row>
     <v-btn @click="addNew">
       Add new card
@@ -33,26 +42,11 @@ const chance = require("chance")()
 export default {
   data: function () {
     return {
-      items: [
-        {
-          title: "ha",
-          text: "hammad asif"
-        },
-        {
-          title: "ha",
-          text: "akjshdlkashdblashbdlasybdlaskbhdkashdbkasdhakshd lahd laskjgdlasjdgals dgaksld alsd lasd akjshdlkashdblashbdlasybdlaskbhdkashdbkasdhakshd lahd laskjgdlasjdgals dgaksld alsd lasd akjshdlkashdblashbdlasybdlaskbhdkashdbkasdhakshd lahd laskjgdlasjdgals dgaksld alsd lasdakjshdlkashdblashbdlasybdlaskbhdkashdbkasdhakshd lahd laskjgdlasjdgals dgaksld alsd lasdakjshdlkashdblashbdlasybdlaskbhdkashdbkasdhakshd lahd laskjgdlasjdgals dgaksld alsd lasd akjshdlkashdblashbdlasybdlaskbhdkashdbkasdhakshd lahd laskjgdlasjdgals dgaksld alsd lasd "
-        }
-        ,
-        {
-          title: "ha",
-          text: "hammad asif"
-        },
-        {
-          title: "ha",
-          text: "hammad asif"
-        }
-      ]
+      items: []
     }
+  },
+  mounted () {
+    Array(20).fill(1).forEach((a) => this.addNew())
   },
   methods: {
     deleteItem (index) {
@@ -63,8 +57,11 @@ export default {
     },
     addNew () {
       this.items.push({
+        id: chance.guid(),
         title: chance.sentence(),
-        text: chance.paragraph()
+        height: this.items.length % 2 === 0 ? 400 : 800,
+        img: this.items.length % 4 === 0 ? `https://picsum.photos/seed/${chance.integer()}/200/200` : undefined,
+        text: this.items.length % 4 !== 0 ? chance.paragraph() : undefined
       })
       this.$nextTick(() => {
         this.$redrawVueMasonry()

@@ -10,8 +10,10 @@ import "@mdi/font/css/materialdesignicons.css"
 import validationRules from "./plugins/validation-rules"
 Vue.use(validationRules)
 
-import { VueMasonryPlugin } from "vue-masonry"
-Vue.use(VueMasonryPlugin)
+// import { VueMasonryPlugin } from "vue-masonry"
+// Vue.use(VueMasonryPlugin)
+import VueMasonry from "vue-masonry-css"
+Vue.use(VueMasonry)
 
 import VuePageTransition from "vue-page-transition"
 Vue.use(VuePageTransition)
